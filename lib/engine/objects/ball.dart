@@ -3,7 +3,7 @@ import 'package:flutter_physice/engine/world.dart';
 
 class Ball extends PhysicsObject {
   double r;
-  Ball(double x, double y, this.r) : super(x, y);
+  Ball(double x, double y, this.r, {double vx = 0, double vy = 0}) : super(x, y, vx: vx, vy: vy);
 
   @override
   void render(Canvas canvas) {
@@ -12,10 +12,7 @@ class Ball extends PhysicsObject {
 
   @override
   void updateInternal(Size size) {
-    super.vx = 0;
-    super.vy =10;
+
   }
 
 }
-
-
