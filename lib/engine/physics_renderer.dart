@@ -47,7 +47,8 @@ class PhysicsPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     canvas.drawColor(Colors.red, BlendMode.color);
-    world.render(canvas, size);
+    world.update(size);
+    world.render(canvas);
   }
 
   @override

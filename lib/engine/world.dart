@@ -1,36 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_physice/engine/objects/ball.dart';
 
 class World {
-  List<Thing> things = [];
+  List<PhysicsObject> things = [];
 
   World() {
     things.add(Ball(100, 100, 50));
+    // things.add(Line(100, 100, 50));
   }
 
-  void render(Canvas canvas, Size size) {
+  void update(Size size) {
     things.forEach((element) {
-      (element as Ball).applyGravity();
-      element.render(canvas, size);
+      (element as Ball).update(size);
+    });
+  }
+
+  void render(Canvas canvas) {
+    things.forEach((element) {
+      element.render(canvas);
     });
   }
 }
 
-class Ball extends Thing {
-  double x, y, r;
+abstract class PhysicsObject {
+  double x, y, vx, vy;
 
-  Ball(this.x, this.y, this.r);
-
-  @override
-  void render(Canvas canvas, Size size) {
-    print(y);
-    canvas.drawCircle(Offset(x, y), r, Paint()..color = Colors.white);
-  }
+  PhysicsObject(this.x, this.y, {this.vx = 0, this.vy = 0});
 
   void applyGravity() {
     y++;
   }
-}
 
-abstract class Thing {
-  void render(Canvas canvas, Size size);
+  void updateInternal(Size size);
+
+  void update(Size size) {
+    updateInternal(size);
+    x = x + vx;
+    y = y + vy;
+    applyGravity();
+  }
+
+  void render(Canvas canvas);
 }
