@@ -3,15 +3,14 @@ import 'package:flutter/material.dart';
 class World {
   List<Thing> things = [];
 
-
   World() {
     things.add(Ball(100, 100, 50));
   }
 
   void render(Canvas canvas, Size size) {
     things.forEach((element) {
-      element.render(canvas, size);
       (element as Ball).applyGravity();
+      element.render(canvas, size);
     });
   }
 }
@@ -23,11 +22,12 @@ class Ball extends Thing {
 
   @override
   void render(Canvas canvas, Size size) {
+    print(y);
     canvas.drawCircle(Offset(x, y), r, Paint()..color = Colors.white);
   }
 
   void applyGravity() {
-    y = y+1;
+    y++;
   }
 }
 

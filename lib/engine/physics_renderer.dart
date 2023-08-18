@@ -8,30 +8,46 @@ class PhysicsRenderer extends StatefulWidget {
   State<PhysicsRenderer> createState() => _PhysicsRendererState();
 }
 
-class _PhysicsRendererState extends State<PhysicsRenderer> with SingleTickerProviderStateMixin{
-
-
-
+class _PhysicsRendererState extends State<PhysicsRenderer>
+    with SingleTickerProviderStateMixin {
+  AnimationController? controller;
+  World world = World();
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: PhysicsPainter(),
+      painter: PhysicsPainter(world),
     );
   }
 
   @override
   void initState() {
     super.initState();
+    controller =
+        AnimationController(duration: const Duration(seconds: 10), vsync: this);
+    controller!.addListener(() {
+      setState(() {});
+    });
+    controller!.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        controller!.repeat();
+      } else if (status == AnimationStatus.dismissed) {
+        controller!.forward();
+      }
+    });
+
+    controller!.forward();
   }
 }
 
 class PhysicsPainter extends CustomPainter {
-  final world = World();
+  final World world;
+
+  PhysicsPainter(this.world);
+
   @override
   void paint(Canvas canvas, Size size) {
     canvas.drawColor(Colors.red, BlendMode.color);
     world.render(canvas, size);
-
   }
 
   @override
