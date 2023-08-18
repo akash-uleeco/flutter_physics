@@ -26,7 +26,8 @@ class World {
 abstract class PhysicsObject {
   double x, y, vx, vy, ax, ay;
 
-  PhysicsObject(this.x, this.y, {this.vx = 0, this.vy = 0, this.ax = 0, this.ay = 0});
+  PhysicsObject(this.x, this.y,
+      {this.vx = 0, this.vy = 0, this.ax = 0, this.ay = 0});
 
   void applyGravity() {
     applyForce(0, World.G);
@@ -40,12 +41,16 @@ abstract class PhysicsObject {
   void updateInternal(Size size);
 
   void checkBoundaries(Size size) {
-    if (x < 0 || x > size.width) {
+    if (x <= 0 || x >= size.width) {
       vx *= -1;
     }
-    if (y < 0 || y > size.height) {
+    if (y <= 0 || y >= size.height) {
       vy *= -1;
     }
+    if (y > size.height) y = size.height - 1;
+    if (y < 0) y = 1;
+    if (x > size.width) x = size.width - 1;
+    if (x < 0) x = 1;
   }
 
   void update(Size size) {
