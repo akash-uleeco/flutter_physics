@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_physice/engine/objects/ball.dart';
+import 'package:flutter_physice/engine/objects/generic_object.dart';
 
 class World {
   static const G = 1.0;
@@ -8,11 +9,12 @@ class World {
 
   World() {
     things.add(Ball(100, 500, 50));
+    things.add(GenericObject(150, 500, 50));
   }
 
   void update(Size size) {
     things.forEach((element) {
-      (element as Ball).update(size);
+      (element as PhysicsObject).update(size,element);
     });
   }
 
@@ -38,6 +40,11 @@ abstract class PhysicsObject {
     this.ay += ay;
   }
 
+  void applyReverseForce(double ax, double ay) {
+    this.ax -= ax;
+    this.ay -= ay;
+  }
+
   void updateInternal(Size size);
 
   void checkBoundaries(Size size) {
@@ -53,10 +60,18 @@ abstract class PhysicsObject {
     if (x < 0) x = 1;
   }
 
-  void update(Size size) {
+  int bounceflag = 0;
+  void update(Size size,PhysicsObject object) {
     updateInternal(size);
     checkBoundaries(size);
-    applyGravity();
+    if(object is Ball){
+      applyGravity();
+    }
+
+    if(object is GenericObject){
+      applyReverseForce(1, World.G);
+    }
+
     vx = vx + ax;
     vy = vy + ay;
     x = x + vx;
