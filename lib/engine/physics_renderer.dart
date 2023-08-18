@@ -14,8 +14,13 @@ class _PhysicsRendererState extends State<PhysicsRenderer>
   World world = World();
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      painter: PhysicsPainter(world),
+    return GestureDetector(
+      onTapDown: (TapDownDetails details) {
+        world.onClick(details.globalPosition.dx, details.globalPosition.dy);
+      },
+      child: CustomPaint(
+        painter: PhysicsPainter(world),
+      ),
     );
   }
 
@@ -47,7 +52,9 @@ class PhysicsPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     canvas.drawColor(Colors.red, BlendMode.color);
-    world.update(size);
+    for (int i = 0; i < World.SUB_STEPS; i++) {
+      world.update(size);
+    }
     world.render(canvas);
   }
 
